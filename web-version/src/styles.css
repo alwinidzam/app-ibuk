@@ -1,0 +1,1280 @@
+/* =========================================================
+   Apple Human Interface Guidelines & iOS Craftsmanship System
+   Buku Kas Ibuk — Anti-AI-Slop Clean Pure Architecture
+   ========================================================= */
+
+:root {
+  /* Apple iOS Semantic Canvas & Backgrounds */
+  --system-grouped-bg: #F2F2F7;
+  --secondary-grouped-bg: #FFFFFF;
+  --tertiary-grouped-bg: #E5E5EA;
+
+  /* Semantic Typography Hierarchy */
+  --label-primary: #000000;
+  --label-secondary: #636366;
+  --label-tertiary: #8E8E93;
+  --label-quaternary: #AEAEB2;
+
+  /* Apple Semantic Accents */
+  --apple-green: #34C759;
+  --apple-green-bg: #ECFDF5;
+  --apple-green-tint: rgba(52, 199, 89, 0.12);
+
+  --apple-red: #FF3B30;
+  --apple-red-bg: #FEF2F2;
+  --apple-red-tint: rgba(255, 59, 48, 0.12);
+
+  --apple-blue: #0A84FF;
+  --apple-blue-bg: #F0F9FF;
+
+  --apple-purple: #AF52DE;
+  --apple-purple-bg: #FAF5FF;
+
+  /* Hairlines & Insets */
+  --hairline: rgba(60, 60, 67, 0.12);
+  --hairline-subtle: rgba(60, 60, 67, 0.06);
+
+  /* Materials & Elevations (WWDC Translucent Chrome) */
+  --dock-bg: rgba(255, 255, 255, 0.86);
+  --dock-border: rgba(255, 255, 255, 0.9);
+  --dock-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.1), 0 4px 12px -2px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  --sheet-shadow: 0 -12px 40px rgba(0, 0, 0, 0.14);
+
+  /* Apple Continuous Squircles */
+  --radius-card: 22px;
+  --radius-dock: 32px;
+  --radius-button: 16px;
+  --radius-pill: 9999px;
+  --touch-target-min: 48px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--system-grouped-bg);
+  color: var(--label-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.45;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular figures for financial numerals */
+.tnum, .tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* App viewport wrapper (Edge-to-edge on mobile, centered clean on desktop) */
+.app-viewport {
+  position: relative;
+  max-width: 440px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(max(env(safe-area-inset-top, 0px), 24px) + 8px);
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: calc(115px + max(env(safe-area-inset-bottom, 0px), 16px));
+}
+
+/* Book theme color tokens */
+.theme-sekolah {
+  --book-tint: #0A84FF;
+  --book-tint-subtle: #E0F2FE;
+}
+
+.theme-ibu {
+  --book-tint: #AF52DE;
+  --book-tint-subtle: #F3E8FF;
+}
+
+.theme-rumah {
+  --book-tint: #34C759;
+  --book-tint-subtle: #DCFCE7;
+}
+
+/* =========================================================
+   1. HEADER & APPLE SEGMENTED CONTROL
+   ========================================================= */
+
+.app-header {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 14px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.header-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  text-transform: capitalize;
+  letter-spacing: -0.01em;
+}
+
+.icon-btn {
+  background: var(--secondary-grouped-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--label-secondary);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+  background: var(--tertiary-grouped-bg);
+}
+
+/* Native Apple Segmented Control Bar with Add Action */
+.segmented-control-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  height: 44px;
+}
+
+.segmented-control {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(229, 229, 234, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 3px;
+  border-radius: 14px;
+  position: relative;
+  overflow-x: auto;
+  scrollbar-width: none;
+  height: 44px;
+}
+
+.segmented-control::-webkit-scrollbar {
+  display: none;
+}
+
+.segment-add-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px; /* Concentric: matches segmented container outer radius */
+  background: var(--secondary-grouped-bg);
+  border: 1px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--label-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.segment-add-btn:active {
+  transform: scale(0.92);
+  background: var(--tertiary-grouped-bg);
+}
+
+.segment-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  border: none;
+  background: transparent;
+  border-radius: 11px; /* 14px - 3px = 11px concentric squircle */
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 38px;
+  white-space: nowrap;
+}
+
+.segment-item.active {
+  background: #FFFFFF;
+  color: var(--label-primary);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.segment-item:active {
+  transform: scale(0.97);
+}
+
+/* =========================================================
+   2. HERO BALANCE PASSBOOK CARD (Apple Wallet / Things 3 Style)
+   ========================================================= */
+
+.balance-hero-card {
+  position: relative;
+  z-index: 1;
+  background: var(--secondary-grouped-bg);
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+  padding: 20px 20px 18px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.balance-hero-card:active {
+  transform: scale(0.995);
+}
+
+.hero-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.hero-book-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-book-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--book-tint, #0A84FF);
+  flex-shrink: 0;
+}
+
+.hero-book-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  letter-spacing: -0.01em;
+}
+
+.hero-status-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--label-tertiary);
+  background: var(--system-grouped-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.hero-balance-content {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  margin: 10px 0 20px 0;
+}
+
+.hero-currency-prefix {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--label-secondary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  align-self: baseline;
+}
+
+.hero-balance-amount {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--label-primary);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  align-self: baseline;
+}
+
+/* Integrated Two-Column Metrics Bar (Radical Subtraction: No card-within-card!) */
+.hero-metrics-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+}
+
+.hero-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 4px;
+}
+
+.hero-metric-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.hero-metric-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label-secondary);
+}
+
+.hero-metric-val {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.hero-metric-val.in {
+  color: #059669;
+}
+
+.hero-metric-val.out {
+  color: #DC2626;
+}
+
+.hero-metric-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--hairline);
+  margin: 0 8px;
+}
+
+/* =========================================================
+   3. MONTH NAVIGATION (Integrated Journal Header)
+   ========================================================= */
+
+.month-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.month-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--label-primary);
+  letter-spacing: -0.015em;
+}
+
+.month-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.month-btn {
+  background: var(--secondary-grouped-bg);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--label-primary);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease;
+}
+
+.month-btn:active {
+  transform: scale(0.92);
+  background: var(--tertiary-grouped-bg);
+}
+
+.month-btn svg {
+  display: block;
+}
+
+.month-btn.prev svg {
+  transform: translateX(-1px); /* Optical center compensation for left chevron */
+}
+
+.month-btn.next svg {
+  transform: translateX(1px); /* Optical center compensation for right chevron */
+}
+
+/* =========================================================
+   4. INSET GROUPED TRANSACTION LIST (Apple HIG TableView)
+   ========================================================= */
+
+.date-group {
+  margin-bottom: 18px;
+}
+
+.date-group-header {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 7px;
+  padding-left: 16px; /* Aligns with row content */
+}
+
+.tx-card-list {
+  background: var(--secondary-grouped-bg);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.tx-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  background: #FFFFFF;
+  transition: background 0.12s ease;
+}
+
+.tx-row:active {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Hairline Inset Divider: 16px padding + 40px icon + 12px gap = 68px. Never cuts icon! */
+.tx-row:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 68px;
+  right: 0;
+  height: 0.5px;
+  background: var(--hairline);
+}
+
+.tx-leading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tx-icon-bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #F3F4F6;
+  transition: transform 0.15s ease;
+}
+
+.tx-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.tx-category {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--label-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.25;
+}
+
+.tx-photo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--apple-blue-bg);
+  color: var(--apple-blue);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tx-note {
+  font-size: 13px;
+  color: var(--label-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.tx-trailing {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.tx-amount {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.tx-amount.in {
+  color: #059669;
+}
+
+.tx-amount.out {
+  color: #1F2937;
+}
+
+/* Empty State */
+.empty-box {
+  text-align: center;
+  padding: 44px 20px;
+  background: var(--secondary-grouped-bg);
+  border-radius: 18px;
+  border: 1px dashed rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.empty-icon {
+  margin-bottom: 12px;
+}
+
+.empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--label-primary);
+  margin-bottom: 4px;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: var(--label-secondary);
+  max-width: 250px;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+/* =========================================================
+   5. FLOATING ACTION DOCK (Ergonomic Natural Thumb Zone)
+   ========================================================= */
+
+.floating-dock-container {
+  position: fixed;
+  bottom: calc(14px + max(env(safe-area-inset-bottom, 0px), 14px));
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.floating-dock {
+  pointer-events: auto;
+  max-width: 400px;
+  width: 100%;
+  background: var(--dock-bg);
+  backdrop-filter: blur(25px) saturate(190%);
+  -webkit-backdrop-filter: blur(25px) saturate(190%);
+  border: 1px solid var(--dock-border);
+  box-shadow: var(--dock-shadow);
+  border-radius: 28px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dock-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 48px;
+  border-radius: 22px;
+  border: none;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease;
+}
+
+.dock-btn:active {
+  transform: scale(0.95);
+}
+
+.dock-btn.income {
+  background: #059669;
+  color: #FFFFFF;
+}
+
+.dock-btn.income:active {
+  background: #047857;
+}
+
+.dock-btn.expense {
+  background: #DC2626;
+  color: #FFFFFF;
+}
+
+.dock-btn.expense:active {
+  background: #B91C1C;
+}
+
+.dock-btn.report {
+  flex: 0.85;
+  background: #F3F4F6;
+  color: var(--label-primary);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dock-btn.report:active {
+  background: #E5E7EB;
+}
+
+/* =========================================================
+   6. BOTTOM SHEET MODAL (Apple HIG Interactive Sheet)
+   ========================================================= */
+
+dialog.sheet {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 100;
+  overflow: hidden;
+}
+
+dialog.sheet:not([open]) {
+  display: none;
+}
+
+dialog.sheet::backdrop {
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.22s ease-out;
+}
+
+.sheet-inner {
+  background: #FFFFFF;
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--sheet-shadow);
+  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.sheet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--hairline);
+  position: relative;
+}
+
+.sheet-bar h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--label-primary);
+  text-align: center;
+  flex: 1;
+}
+
+.bar-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--apple-blue);
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.bar-btn.danger {
+  color: var(--apple-red);
+}
+
+.bar-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sheet-body {
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Modal Form Controls */
+.amount-display-box {
+  background: #F8FAFC;
+  border-radius: 18px;
+  padding: 18px 14px;
+  text-align: center;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.amount-input-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.amount-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.amount-hero-text {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.amount-hero-text.in {
+  color: #059669;
+}
+
+.amount-hero-text.out {
+  color: #DC2626;
+}
+
+/* Quick Chips */
+.quick-chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.chip-btn {
+  flex: 1;
+  min-width: 64px;
+  background: #FFFFFF;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--label-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.chip-btn:active {
+  background: var(--tertiary-grouped-bg);
+  transform: scale(0.96);
+}
+
+/* Category Grid */
+.category-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.category-tile {
+  background: #F8FAFC;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.category-tile .tile-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-tile .tile-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label-primary);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.category-tile.active {
+  background: #FFFFFF;
+  border-color: var(--apple-blue);
+  box-shadow: 0 2px 8px rgba(10, 132, 255, 0.15);
+}
+
+.category-tile:active {
+  transform: scale(0.96);
+}
+
+/* Fields */
+.form-field-group {
+  margin-bottom: 16px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.text-input, .date-input {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--hairline);
+  background: #F8FAFC;
+  padding: 0 14px;
+  font-size: 15px;
+  color: var(--label-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+.text-input:focus, .date-input:focus {
+  border-color: var(--apple-blue);
+  background: #FFFFFF;
+}
+
+/* Receipt Photo Upload Box */
+.photo-uploader-box {
+  background: #F8FAFC;
+  border: 1.5px dashed rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 22px;
+}
+
+.photo-uploader-box.has-photo {
+  border-style: solid;
+  border-color: #059669;
+  background: #F0FDF4;
+}
+
+.preview-thumb {
+  max-height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Big primary action button */
+.primary-action-btn {
+  width: 100%;
+  height: 52px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.primary-action-btn.in {
+  background: #059669;
+}
+
+.primary-action-btn.in:active {
+  background: #047857;
+  transform: scale(0.97);
+}
+
+.primary-action-btn.out {
+  background: #DC2626;
+}
+
+.primary-action-btn.out:active {
+  background: #B91C1C;
+  transform: scale(0.97);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* =========================================================
+   Transaction Detail Sheet (Apple HIG Inset Grouped)
+   ========================================================= */
+.tx-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.tx-detail-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 12px 10px;
+}
+
+.tx-detail-icon-bubble {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.tx-detail-category {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--label-primary);
+  margin-bottom: 4px;
+}
+
+.tx-detail-book-badge {
+  background: var(--fill-tertiary);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--label-secondary);
+  margin-bottom: 12px;
+}
+
+.tx-detail-amount {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.tx-detail-type-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--label-secondary);
+}
+
+.tx-detail-section-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--label-tertiary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-left: 14px;
+  margin-top: 4px;
+  margin-bottom: -8px;
+}
+
+.tx-detail-card {
+  background: var(--secondary-grouped-bg);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+
+.tx-detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  gap: 12px;
+}
+
+.tx-detail-row.column {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.tx-detail-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--label-secondary);
+}
+
+.tx-detail-value {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--label-primary);
+  text-align: right;
+}
+
+.tx-detail-note-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--label-primary);
+  background: rgba(0, 0, 0, 0.02);
+  padding: 10px 12px;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  word-break: break-word;
+}
+
+.tx-detail-hairline {
+  height: 0.5px;
+  background: var(--hairline);
+  margin-left: 16px;
+}
+
+.tx-detail-photo-card {
+  background: var(--secondary-grouped-bg);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.tx-detail-photo-card:active {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.tx-detail-photo-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.tx-detail-photo-placeholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #E0F2FE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tx-detail-photo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tx-detail-photo-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0A84FF;
+}
+
+.tx-detail-photo-hint {
+  font-size: 12px;
+  color: var(--label-secondary);
+}
+
+.tx-detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tx-detail-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+
+.tx-detail-btn:active {
+  transform: scale(0.98);
+}
+
+.tx-detail-btn.edit {
+  background: #EFF6FF;
+  color: #0A84FF;
+}
+
+.tx-detail-btn.edit:active {
+  background: #DBEAFE;
+}
+
+.tx-detail-btn.share {
+  background: #F0FDF4;
+  color: #059669;
+}
+
+.tx-detail-btn.share:active {
+  background: #DCFCE7;
+}
+
+.tx-detail-btn.delete {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.tx-detail-btn.delete:active {
+  background: #FEE2E2;
+}
+
+.tx-detail-confirm-box {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 16px;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.tx-confirm-header strong {
+  font-size: 15px;
+  color: #991B1B;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.tx-confirm-header p {
+  font-size: 13px;
+  color: #7F1D1D;
+  line-height: 1.45;
+  margin: 0 0 14px 0;
+}
+
+.tx-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.tx-confirm-cancel-btn {
+  flex: 1;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid #FCA5A5;
+  background: #FFFFFF;
+  color: #4B5563;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tx-confirm-delete-btn {
+  flex: 1;
+  height: 42px;
+  border-radius: 12px;
+  border: none;
+  background: #DC2626;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tx-confirm-delete-btn:disabled,
+.tx-confirm-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
