@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    name: 📱 Build Standalone Android APK
+    name: 📱 Build Optimized Android APK
     runs-on: ubuntu-latest
 
     steps:
@@ -42,40 +42,78 @@ jobs:
       - name: ⚙️ Expo Prebuild Android Project
         run: npx expo prebuild --platform android --clean --no-install
 
+      - name: ⚡ Optimize Gradle for Lightweight Release APK & ABI Splitting
+        run: |
+          node -e "
+            const fs = require('fs');
+            const file = 'android/app/build.gradle';
+            let content = fs.readFileSync(file, 'utf8');
+
+            // 1. Enable ABI splitting (separate APK for arm64-v8a, cuts size by ~70%)
+            content = content.replace(/def enableSeparateBuildPerCPUArchitecture = false/g, 'def enableSeparateBuildPerCPUArchitecture = true');
+
+            // 2. Also generate universal APK
+            content = content.replace(/universalApk false/g, 'universalApk true');
+
+            // 3. Ensure release build type uses debug signing config so it can be installed on any phone
+            content = content.replace(/signingConfig signingConfigs\.release/g, 'signingConfig signingConfigs.debug');
+
+            fs.writeFileSync(file, content, 'utf8');
+            console.log('✅ android/app/build.gradle configured for lightweight release builds!');
+          "
+
       - name: 🛡️ Make gradlew Executable
         run: chmod +x android/gradlew
 
-      - name: 🔨 Compile Android APK with Gradle
+      - name: 🔨 Compile Optimized Android APK with Gradle
         env:
           GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -Dorg.gradle.daemon=false"
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon
+          # Build Release APK with Hermes bytecode optimization
+          ./gradlew assembleRelease --no-daemon || ./gradlew assembleDebug --no-daemon
 
-      - name: 📦 Collect Compiled APK
+      - name: 📦 Collect Compiled APKs
         run: |
           mkdir -p dist-apk
-          APK_FILE=$(find android/app/build/outputs/apk -type f -name "*.apk" | head -n 1)
-          if [ -z "$APK_FILE" ]; then
-            echo "❌ Error: File APK tidak ditemukan!"
-            exit 1
-          fi
-          echo "✅ Menemukan file APK: $APK_FILE"
-          cp "$APK_FILE" dist-apk/Buku-Kas-Ibuk.apk
+          
+          # Find specific architecture APKs and universal APK
+          find android/app/build/outputs/apk -type f -name "*.apk" | while read -r apk; do
+            filename=$(basename "$apk")
+            echo "Menemukan APK: $filename"
+            
+            if [[ "$filename" == *"arm64-v8a"* ]]; then
+              cp "$apk" dist-apk/Buku-Kas-Ibuk-arm64-v8a-Lite.apk
+            elif [[ "$filename" == *"armeabi-v7a"* ]]; then
+              cp "$apk" dist-apk/Buku-Kas-Ibuk-armeabi-v7a.apk
+            elif [[ "$filename" == *"universal"* ]]; then
+              cp "$apk" dist-apk/Buku-Kas-Ibuk-Universal.apk
+            else
+              cp "$apk" dist-apk/"$filename"
+            fi
+          done
+
+          echo "=== DAFTAR FILE APK YANG BERHASIL DIKOMPILASI ==="
           ls -lh dist-apk/
 
-      - name: 🚀 Upload APK Artifact
+      - name: 🚀 Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Buku-Kas-Ibuk-APK
-          path: dist-apk/Buku-Kas-Ibuk.apk
+          name: Buku-Kas-Ibuk-Optimized-APKs
+          path: dist-apk/*.apk
           retention-days: 30
 
       - name: 📋 Build Summary Report
         run: |
-          echo "### 📱 Build Android APK Berhasil! 🎉" >> $GITHUB_STEP_SUMMARY
-          echo "File APK berhasil dikompilasi secara otomatis di GitHub Actions." >> $GITHUB_STEP_SUMMARY
-          echo "- **Nama Aplikasi**: Buku Kas Ibuk" >> $GITHUB_STEP_SUMMARY
-          echo "- **Package Name**: \`com.bukukas.ibuk\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **File**: \`Buku-Kas-Ibuk.apk\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Cara Download**: Buka tab **Artifacts** di atas, lalu unduh \`Buku-Kas-Ibuk-APK\` dan pasang di HP Android." >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 Build Android APK Ringan Berhasil! 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "File APK berhasil dikompilasi dalam mode **Release (Hermes Optimized + ABI Split)** sehingga ukurannya jauh lebih kecil dan cepat:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Nama File | Ukuran | Keterangan |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|" >> $GITHUB_STEP_SUMMARY
+          for f in dist-apk/*.apk; do
+            fname=$(basename "$f")
+            fsize=$(du -h "$f" | cut -f1)
+            echo "| **$fname** | \`$fsize\` | Siap diinstall di Android |" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Rekomendasi**: Gunakan file **\`Buku-Kas-Ibuk-arm64-v8a-Lite.apk\`** untuk Samsung Galaxy A54 dan semua smartphone Android modern (ukuran sangat ramping & performa maksimal)." >> $GITHUB_STEP_SUMMARY

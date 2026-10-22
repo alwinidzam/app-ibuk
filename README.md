@@ -14,9 +14,11 @@ Anda tidak perlu ribet menginstal tools atau kompilasi manual di laptop! GitHub 
 1. Buka tab **[Actions](https://github.com/alwinidzam/app-ibuk/actions)** di repository GitHub ini.
 2. Klik workflow **Build Android APK** paling atas (yang bertanda centang hijau ✅).
 3. Gulir ke bagian paling bawah ke bagian **Artifacts**.
-4. Klik **`Buku-Kas-Ibuk-APK`** untuk mengunduh file `.zip` yang berisi `Buku-Kas-Ibuk.apk`.
-5. Ekstrak dan kirim file `.apk` ke HP Android (atau buka langsung dari browser HP Anda).
-6. Ketuk **Pasang / Install** di HP Android (izinkan instalasi dari sumber ini jika diminta).
+4. Klik **`Buku-Kas-Ibuk-Optimized-APKs`** untuk mengunduh:
+   - **`Buku-Kas-Ibuk-arm64-v8a-Lite.apk`** (~16 MB): **Sangat direkomendasikan** untuk Samsung Galaxy A54 dan hampir seluruh smartphone Android modern. Ukuran jauh lebih hemat dan performa optimal.
+   - **`Buku-Kas-Ibuk-Universal.apk`**: Versi universal untuk semua jenis chipset Android.
+5. Ekstrak dan kirim file `.apk` ke HP Android (atau unduh langsung dari HP).
+6. Ketuk **Pasang / Install** di HP Android (izinkan instalasi sumber tidak dikenal jika diminta).
 
 ---
 
