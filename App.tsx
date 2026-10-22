@@ -11,6 +11,7 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { NativeHeader } from './src/components/NativeHeader';
+import { NativeAmbientBackground } from './src/components/NativeAmbientBackground';
 import { NativeBalanceCard } from './src/components/NativeBalanceCard';
 import { NativeTransactionList } from './src/components/NativeTransactionList';
 import { NativeDock } from './src/components/NativeDock';
@@ -154,11 +155,13 @@ function MainApp() {
   }
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: ambientColors }]}
-      edges={['top', 'left', 'right']}
-    >
-      <StatusBar style="dark" />
+    <View style={styles.root}>
+      <NativeAmbientBackground activeBook={activeBook} />
+      <SafeAreaView
+        style={styles.container}
+        edges={['top', 'left', 'right']}
+      >
+        <StatusBar style="dark" />
 
       <ScrollView
         style={styles.scrollView}
@@ -278,7 +281,8 @@ function MainApp() {
         onClose={() => setViewPhotoUri(null)}
       />
     </SafeAreaView>
-  );
+  </View>
+);
 }
 
 export default function App() {
@@ -292,9 +296,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#F2F2F7',
+    backgroundColor: 'transparent',
   },
   centered: {
     justifyContent: 'center',

@@ -11,7 +11,7 @@ export const DEFAULT_BOOKS: Book[] = [
     name: 'Kas Sekolah',
     icon: 'school',
     accentColor: '#0A84FF',
-    accentBg: '#E0F2FE',
+    accentBg: '#F8FAFC',
     categories: {
       in: [
         saldoAwal,
@@ -36,7 +36,7 @@ export const DEFAULT_BOOKS: Book[] = [
     name: 'Kas Ibu-Ibu',
     icon: 'mother',
     accentColor: '#AF52DE',
-    accentBg: '#F3E8FF',
+    accentBg: '#FAF7FB',
     categories: {
       in: [
         saldoAwal,
@@ -60,7 +60,7 @@ export const DEFAULT_BOOKS: Book[] = [
     name: 'Kas Rumah',
     icon: 'home',
     accentColor: '#34C759',
-    accentBg: '#DCFCE7',
+    accentBg: '#F6FAF7',
     categories: {
       in: [
         saldoAwal,
