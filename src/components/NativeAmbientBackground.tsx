@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import type { BookId } from '../types';
 
 interface Props {
@@ -8,43 +8,33 @@ interface Props {
 }
 
 interface AmbientConfig {
-  keyColor1: string;
-  keyColor2: string;
-  fillColor1: string;
-  fillColor2: string;
   canvasBg: string;
+  keyColor: string;
+  fillColor: string;
 }
 
 const AMBIENT_CONFIGS: Record<string, AmbientConfig> = {
   sekolah: {
-    canvasBg: '#F8FAFC', // Apple System Grouped Light
-    keyColor1: 'rgba(14, 165, 233, 0.22)', // Sky Blue
-    keyColor2: 'rgba(37, 99, 235, 0.10)', // Apple Royal Blue
-    fillColor1: 'rgba(99, 102, 241, 0.16)', // Soft Indigo (Dock refractor)
-    fillColor2: 'rgba(14, 165, 233, 0.08)',
+    canvasBg: '#F8FAFC',
+    keyColor: '#0284C7',
+    fillColor: '#6366F1',
   },
   ibu: {
     canvasBg: '#FAF7FB',
-    keyColor1: 'rgba(175, 82, 222, 0.20)', // Apple Orchid
-    keyColor2: 'rgba(217, 70, 239, 0.10)', // Magenta
-    fillColor1: 'rgba(244, 114, 182, 0.16)', // Soft Rose (Dock refractor)
-    fillColor2: 'rgba(168, 85, 247, 0.08)',
+    keyColor: '#A855F7',
+    fillColor: '#EC4899',
   },
   rumah: {
     canvasBg: '#F6FAF7',
-    keyColor1: 'rgba(16, 185, 129, 0.20)', // Emerald Mint
-    keyColor2: 'rgba(52, 199, 89, 0.11)', // Apple Green
-    fillColor1: 'rgba(14, 165, 233, 0.15)', // Cyan Mist (Dock refractor)
-    fillColor2: 'rgba(5, 150, 105, 0.08)',
+    keyColor: '#10B981',
+    fillColor: '#0284C7',
   },
 };
 
 const DEFAULT_CONFIG: AmbientConfig = {
   canvasBg: '#F8FAFC',
-  keyColor1: 'rgba(14, 165, 233, 0.18)',
-  keyColor2: 'rgba(99, 102, 241, 0.08)',
-  fillColor1: 'rgba(16, 185, 129, 0.12)',
-  fillColor2: 'rgba(14, 165, 233, 0.06)',
+  keyColor: '#0284C7',
+  fillColor: '#6366F1',
 };
 
 export function NativeAmbientBackground({ activeBook }: Props) {
@@ -52,46 +42,56 @@ export function NativeAmbientBackground({ activeBook }: Props) {
   const { width, height } = Dimensions.get('window');
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: config.canvasBg }]} pointerEvents="none">
+    <View
+      style={[StyleSheet.absoluteFill, { backgroundColor: config.canvasBg }]}
+      pointerEvents="none"
+    >
       <Svg width={width} height={height} style={StyleSheet.absoluteFill}>
         <Defs>
-          {/* Top-Right Key Light (Book Identity Glow) */}
-          <RadialGradient
-            id="keyLight"
-            cx="85%"
-            cy="10%"
-            rx="65%"
-            ry="45%"
-            fx="85%"
-            fy="10%"
+          {/* 
+            Atmospheric Key Wash (Top-Right to Center-Left)
+            Menggunakan Sigmoid Non-Linear Easing 6 Stops & Solid Hex stopColor dengan stopOpacity.
+            Mencegah Skia Android Premultiplied Alpha Dark Fringe & Mach Banding!
+          */}
+          <LinearGradient
+            id="ambientKeyWash"
+            x1="100%"
+            y1="0%"
+            x2="15%"
+            y2="75%"
           >
-            <Stop offset="0%" stopColor={config.keyColor1} />
-            <Stop offset="50%" stopColor={config.keyColor2} />
-            <Stop offset="100%" stopColor="transparent" stopOpacity="0" />
-          </RadialGradient>
+            <Stop offset="0%" stopColor={config.keyColor} stopOpacity={0.14} />
+            <Stop offset="20%" stopColor={config.keyColor} stopOpacity={0.09} />
+            <Stop offset="40%" stopColor={config.keyColor} stopOpacity={0.05} />
+            <Stop offset="65%" stopColor={config.keyColor} stopOpacity={0.02} />
+            <Stop offset="90%" stopColor={config.keyColor} stopOpacity={0.005} />
+            <Stop offset="100%" stopColor={config.keyColor} stopOpacity={0} />
+          </LinearGradient>
 
-          {/* Bottom-Left Fill Light (Refraction light behind Floating Dock) */}
-          <RadialGradient
-            id="fillLight"
-            cx="15%"
-            cy="90%"
-            rx="60%"
-            ry="40%"
-            fx="15%"
-            fy="90%"
+          {/* 
+            Atmospheric Fill Wash (Bottom-Left behind Floating Dock to Top-Right)
+          */}
+          <LinearGradient
+            id="ambientFillWash"
+            x1="0%"
+            y1="100%"
+            x2="85%"
+            y2="35%"
           >
-            <Stop offset="0%" stopColor={config.fillColor1} />
-            <Stop offset="55%" stopColor={config.fillColor2} />
-            <Stop offset="100%" stopColor="transparent" stopOpacity="0" />
-          </RadialGradient>
+            <Stop offset="0%" stopColor={config.fillColor} stopOpacity={0.12} />
+            <Stop offset="25%" stopColor={config.fillColor} stopOpacity={0.075} />
+            <Stop offset="50%" stopColor={config.fillColor} stopOpacity={0.04} />
+            <Stop offset="75%" stopColor={config.fillColor} stopOpacity={0.015} />
+            <Stop offset="100%" stopColor={config.fillColor} stopOpacity={0} />
+          </LinearGradient>
         </Defs>
 
-        {/* Base Canvas */}
+        {/* Base Silk Canvas */}
         <Rect x="0" y="0" width={width} height={height} fill={config.canvasBg} />
 
-        {/* Ambient Diffusion Lights */}
-        <Rect x="0" y="0" width={width} height={height} fill="url(#keyLight)" />
-        <Rect x="0" y="0" width={width} height={height} fill="url(#fillLight)" />
+        {/* Ethereal Atmospheric Layers (100% Smooth without Mach Banding) */}
+        <Rect x="0" y="0" width={width} height={height} fill="url(#ambientKeyWash)" />
+        <Rect x="0" y="0" width={width} height={height} fill="url(#ambientFillWash)" />
       </Svg>
     </View>
   );

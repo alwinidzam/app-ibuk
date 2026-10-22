@@ -24,13 +24,11 @@ interface Props {
 export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props) {
   const book = bookById(bookId, books);
 
-  // Animations
   const translateX = useRef(new Animated.Value(0)).current;
   const punchAnim = useRef(new Animated.Value(1)).current;
 
-  // Punch animation whenever closing amount or book changes
   useEffect(() => {
-    punchAnim.setValue(1.05);
+    punchAnim.setValue(1.04);
     Animated.spring(punchAnim, {
       toValue: 1,
       tension: 360,
@@ -43,14 +41,12 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (_, gesture) => {
-        // Hysteresis deadzone: requires horizontal intent > 15px and 1.8x vertical
         return (
           Math.abs(gesture.dx) > 15 &&
           Math.abs(gesture.dx) > Math.abs(gesture.dy) * 1.8
         );
       },
       onPanResponderMove: (_, gesture) => {
-        // Elastic rubber band when dragging
         const resisted = gesture.dx * 0.6;
         translateX.setValue(resisted);
       },
@@ -58,7 +54,6 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
         const dx = gesture.dx;
         const vx = gesture.vx;
 
-        // Swipe Left -> Next Book
         if ((dx < -50 || (dx < -20 && vx < -0.4)) && onSwipeBook) {
           AppleHaptic.bookSwitch();
           Animated.timing(translateX, {
@@ -78,7 +73,6 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
           return;
         }
 
-        // Swipe Right -> Prev Book
         if ((dx > 50 || (dx > 20 && vx > 0.4)) && onSwipeBook) {
           AppleHaptic.bookSwitch();
           Animated.timing(translateX, {
@@ -98,7 +92,6 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
           return;
         }
 
-        // Snap back to 0 with Apple Critically Damped Spring
         Animated.spring(translateX, {
           toValue: 0,
           tension: 360,
@@ -109,10 +102,9 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
     })
   ).current;
 
-  // Subtle parallax tilt during horizontal drag
   const rotateZ = translateX.interpolate({
     inputRange: [-200, 0, 200],
-    outputRange: ['-2.5deg', '0deg', '2.5deg'],
+    outputRange: ['-2deg', '0deg', '2deg'],
   });
 
   return (
@@ -129,11 +121,18 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
         {/* Passbook Header Row */}
         <View style={styles.topRow}>
           <View style={styles.bookTag}>
-            <View style={[styles.bookDot, { backgroundColor: book.accentColor }]} />
+            <View
+              style={[
+                styles.bookDot,
+                { backgroundColor: book.accentColor || '#0284C7' },
+              ]}
+            />
             <Text style={styles.bookTitle}>{book.name}</Text>
           </View>
+          {/* Kontras Tinggi: Tidak washed-out lagi */}
           <View style={styles.statusPill}>
-            <Text style={styles.statusText}>SALDO BERJALAN</Text>
+            <View style={styles.liveIndicatorDot} />
+            <Text style={styles.statusText}>SALDO KAS AKTIF</Text>
           </View>
         </View>
 
@@ -145,11 +144,14 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
           </Text>
         </View>
 
-        {/* Integrated Two-Column Metrics Bar (Radical Subtraction: No card-in-card!) */}
-        <View style={styles.metricsBar}>
-          <View style={styles.metricItem}>
+        {/* Split Metric Symmetrical Tiles */}
+        <View style={styles.metricsContainer}>
+          {/* Uang Masuk Tile */}
+          <View style={styles.metricTile}>
             <View style={styles.metricHeader}>
-              <ArrowDownIcon size={13} color="#059669" strokeWidth={2} />
+              <View style={[styles.metricIconBubble, styles.metricIconIn]}>
+                <ArrowDownIcon size={12} color="#059669" strokeWidth={2.5} />
+              </View>
               <Text style={styles.metricLabel}>Uang Masuk</Text>
             </View>
             <Text style={[styles.metricVal, { color: '#059669' }]}>
@@ -157,14 +159,18 @@ export function NativeBalanceCard({ bookId, report, books, onSwipeBook }: Props)
             </Text>
           </View>
 
-          <View style={styles.metricDivider} />
+          {/* Hairline Divider */}
+          <View style={styles.metricTileDivider} />
 
-          <View style={styles.metricItem}>
+          {/* Uang Keluar Tile */}
+          <View style={styles.metricTile}>
             <View style={styles.metricHeader}>
-              <ArrowUpIcon size={13} color="#DC2626" strokeWidth={2} />
+              <View style={[styles.metricIconBubble, styles.metricIconOut]}>
+                <ArrowUpIcon size={12} color="#E11D48" strokeWidth={2.5} />
+              </View>
               <Text style={styles.metricLabel}>Uang Keluar</Text>
             </View>
-            <Text style={[styles.metricVal, { color: '#DC2626' }]}>
+            <Text style={[styles.metricVal, { color: '#E11D48' }]}>
               −{rupiah(report.expense)}
             </Text>
           </View>
@@ -181,100 +187,122 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 22,
+    borderRadius: 24,
     paddingHorizontal: 20,
     paddingTop: 18,
     paddingBottom: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
-    shadowColor: '#000',
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.05,
-    shadowRadius: 16,
+    shadowRadius: 18,
     elevation: 3,
   },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   bookTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 7,
+    gap: 8,
   },
   bookDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
   },
   bookTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#636366',
+    fontSize: 14.5,
+    fontWeight: '700',
+    color: '#1E293B',
     letterSpacing: -0.2,
   },
   statusPill: {
-    backgroundColor: '#F2F2F7',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 7,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  liveIndicatorDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#10B981',
   },
   statusText: {
-    fontSize: 10,
+    fontSize: 10.5,
     fontWeight: '700',
-    color: '#8E8E93',
+    color: '#334155',
     letterSpacing: 0.5,
   },
   balanceCenter: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'baseline',
-    gap: 4,
-    marginVertical: 10,
+    gap: 5,
+    marginVertical: 12,
   },
   currencyPrefix: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#636366',
+    color: '#64748B',
     letterSpacing: -0.5,
   },
   balanceAmount: {
-    fontSize: 38,
+    fontSize: 39,
     fontWeight: '800',
-    color: '#000000',
-    letterSpacing: -0.8,
+    color: '#0F172A',
+    letterSpacing: -1,
     ...Platform.select({
       ios: { fontVariant: ['tabular-nums' as const] },
       android: {},
     }),
   },
-  metricsBar: {
+  metricsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 14,
-    borderTopWidth: 0.5,
-    borderTopColor: 'rgba(60, 60, 67, 0.12)',
-    marginTop: 4,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    padding: 10,
+    marginTop: 6,
   },
-  metricItem: {
+  metricTile: {
     flex: 1,
-    paddingHorizontal: 4,
+    paddingHorizontal: 6,
   },
   metricHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginBottom: 3,
+    gap: 6,
+    marginBottom: 4,
+  },
+  metricIconBubble: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  metricIconIn: {
+    backgroundColor: '#ECFDF5',
+  },
+  metricIconOut: {
+    backgroundColor: '#FEF2F2',
   },
   metricLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#636366',
+    color: '#64748B',
   },
   metricVal: {
-    fontSize: 15,
+    fontSize: 15.5,
     fontWeight: '700',
     letterSpacing: -0.3,
     ...Platform.select({
@@ -282,10 +310,10 @@ const styles = StyleSheet.create({
       android: {},
     }),
   },
-  metricDivider: {
-    width: 0.5,
-    height: 26,
-    backgroundColor: 'rgba(60, 60, 67, 0.12)',
-    marginHorizontal: 8,
+  metricTileDivider: {
+    width: 1,
+    height: 28,
+    backgroundColor: 'rgba(60, 60, 67, 0.10)',
+    marginHorizontal: 4,
   },
 });

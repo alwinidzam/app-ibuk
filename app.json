@@ -2,16 +2,18 @@
   "expo": {
     "name": "Kas Bu Qom",
     "slug": "buku-kas-ibuk",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.bukukas.ibuk"
+      "bundleIdentifier": "com.bukukas.ibuk",
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.bukukas.ibuk",
+      "versionCode": 2,
       "adaptiveIcon": {
         "backgroundColor": "#F3F3F3",
         "foregroundImage": "./assets/android-icon-foreground.png",

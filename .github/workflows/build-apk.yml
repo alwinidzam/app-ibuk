@@ -100,8 +100,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
-          name: "Kas Bu Qom ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }} (Release APK)"
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.1' }}
+          name: "Kas Bu Qom ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.1' }} (Release APK)"
           body: |
             ## 📱 Unduh Kas Bu Qom untuk Android
 

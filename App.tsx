@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   LogBox,
 } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { NativeHeader } from './src/components/NativeHeader';
 import { NativeAmbientBackground } from './src/components/NativeAmbientBackground';
@@ -75,6 +75,10 @@ class ErrorBoundary extends Component<{ children: React.ReactNode }, ErrorBounda
 }
 
 function MainApp() {
+  const insets = useSafeAreaInsets();
+  const dockBottomOffset = Math.max(insets.bottom, 16) + 12;
+  const scrollBottomPadding = dockBottomOffset + 68 + 24;
+
   const [books, setBooks] = useState<Book[]>(DEFAULT_BOOKS);
   const [activeBook, setActiveBook] = useState<BookId>('sekolah');
   const [currentMonth, setCurrentMonth] = useState<string>(monthOf(todayISO()));
@@ -165,7 +169,7 @@ function MainApp() {
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={{ paddingBottom: 110 }}
+        contentContainerStyle={{ paddingBottom: scrollBottomPadding }}
         showsVerticalScrollIndicator={false}
       >
         {/* Header with Pure SVG Segmented Control with Manage & Add Action */}

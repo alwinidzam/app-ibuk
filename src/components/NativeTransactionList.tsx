@@ -44,35 +44,39 @@ export function NativeTransactionList({
 
   return (
     <View style={styles.container}>
-      {/* Month Navigation Bar */}
-      <View style={styles.monthBar}>
-        <TouchableOpacity
-          style={styles.monthBtn}
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onSelectMonth(shiftMonth(month, -1));
-          }}
-          accessibilityLabel="Bulan Sebelumnya"
-        >
-          <View style={{ transform: [{ translateX: -1 }] }}>
-            <ChevronLeftIcon size={18} color="#0F172A" strokeWidth={2} />
-          </View>
-        </TouchableOpacity>
+      {/* Apple Journal Unified Month Capsule */}
+      <View style={styles.monthCapsuleWrapper}>
+        <View style={styles.monthCapsule}>
+          <TouchableOpacity
+            style={styles.monthArrowBtn}
+            hitSlop={{ top: 10, bottom: 10, left: 14, right: 8 }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onSelectMonth(shiftMonth(month, -1));
+            }}
+            accessibilityLabel="Bulan Sebelumnya"
+            activeOpacity={0.6}
+          >
+            <ChevronLeftIcon size={16} color="#334155" strokeWidth={2.4} />
+          </TouchableOpacity>
 
-        <Text style={styles.monthTitle}>{monthLabel(month)}</Text>
-
-        <TouchableOpacity
-          style={styles.monthBtn}
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onSelectMonth(shiftMonth(month, 1));
-          }}
-          accessibilityLabel="Bulan Berikutnya"
-        >
-          <View style={{ transform: [{ translateX: 1 }] }}>
-            <ChevronRightIcon size={18} color="#0F172A" strokeWidth={2} />
+          <View style={styles.monthLabelCenter}>
+            <Text style={styles.monthTitle}>{monthLabel(month)}</Text>
           </View>
-        </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.monthArrowBtn}
+            hitSlop={{ top: 10, bottom: 10, left: 8, right: 14 }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              onSelectMonth(shiftMonth(month, 1));
+            }}
+            accessibilityLabel="Bulan Berikutnya"
+            activeOpacity={0.6}
+          >
+            <ChevronRightIcon size={16} color="#334155" strokeWidth={2.4} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Swipe Hint Pill */}
@@ -169,34 +173,42 @@ export function NativeTransactionList({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    paddingBottom: 110,
+    paddingBottom: 16,
   },
-  monthBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  monthCapsuleWrapper: {
     alignItems: 'center',
     marginBottom: 12,
-    paddingHorizontal: 4,
   },
-  monthBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
+  monthCapsule: {
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
+    borderRadius: 22,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.06)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 1.5 },
     shadowOpacity: 0.05,
-    shadowRadius: 2,
+    shadowRadius: 4,
     elevation: 2,
   },
+  monthArrowBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  monthLabelCenter: {
+    paddingHorizontal: 14,
+  },
   monthTitle: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '700',
     color: '#0F172A',
+    letterSpacing: -0.2,
   },
   hintContainer: {
     alignItems: 'center',
@@ -207,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     backgroundColor: 'rgba(255, 255, 255, 0.75)',
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 14,
     borderWidth: 1,
