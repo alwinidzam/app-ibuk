@@ -6,19 +6,17 @@ Dibuat untuk memudahkan pencatatan keuangan kegiatan sekolah, kas ibu-ibu/PKK/ar
 
 ---
 
-## 🚀 Cara Unduh & Pasang APK (Otomatis dari GitHub Actions)
+## 🚀 Download APK Langsung (GitHub Releases)
 
-Anda tidak perlu ribet menginstal tools atau kompilasi manual di laptop! GitHub Actions sudah diatur untuk otomatis mengkompilasi file APK setiap kali ada pembaruan kode.
+Anda tidak perlu pusing memikirkan kompilasi manual atau dashboard cloud! Setiap kali ada pembaruan kode, file `.apk` siap pasang langsung dirilis otomatis di GitHub Releases.
 
-### Langkah-langkah Download:
-1. Buka tab **[Actions](https://github.com/alwinidzam/app-ibuk/actions)** di repository GitHub ini.
-2. Klik workflow **Build Android APK** paling atas (yang bertanda centang hijau ✅).
-3. Gulir ke bagian paling bawah ke bagian **Artifacts**.
-4. Klik **`Buku-Kas-Ibuk-Optimized-APKs`** untuk mengunduh:
-   - **`Buku-Kas-Ibuk-arm64-v8a-Lite.apk`** (~16 MB): **Sangat direkomendasikan** untuk Samsung Galaxy A54 dan hampir seluruh smartphone Android modern. Ukuran jauh lebih hemat dan performa optimal.
-   - **`Buku-Kas-Ibuk-Universal.apk`**: Versi universal untuk semua jenis chipset Android.
-5. Ekstrak dan kirim file `.apk` ke HP Android (atau unduh langsung dari HP).
-6. Ketuk **Pasang / Install** di HP Android (izinkan instalasi sumber tidak dikenal jika diminta).
+👉 **[Unduh APK Terbaru di GitHub Releases](https://github.com/alwinidzam/app-ibuk/releases/latest)**
+
+### Pilihan File APK yang Tersedia:
+- 🚀 **`Buku-Kas-Ibuk-arm64-v8a-Lite.apk`** (~16 MB): **Sangat Direkomendasikan!** Khusus untuk Samsung Galaxy A54 dan hampir seluruh smartphone Android modern. Ukuran super ringan, cepat diunduh, dan performa mulus.
+- 📦 **`Buku-Kas-Ibuk-Universal.apk`** (~30 MB): Versi universal untuk semua jenis perangkat Android (kompatibilitas menyeluruh).
+
+Tinggal unduh file `.apk` di atas langsung dari browser HP Anda, lalu ketuk **Pasang / Install**.
 
 ---
 

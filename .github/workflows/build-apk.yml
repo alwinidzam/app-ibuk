@@ -3,6 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main, master ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
@@ -10,6 +11,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -102,6 +106,35 @@ jobs:
           name: Buku-Kas-Ibuk-Optimized-APKs
           path: dist-apk/*.apk
           retention-days: 30
+
+      - name: 🏷️ Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
+          name: "Buku Kas Ibuk ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }} (Release APK)"
+          body: |
+            ## 📱 Unduh Buku Kas Ibuk untuk Android
+
+            Pilih salah satu file APK di bawah ini dan unduh langsung ke HP Android Anda:
+
+            * 🚀 **[Buku-Kas-Ibuk-arm64-v8a-Lite.apk](https://github.com/alwinidzam/app-ibuk/releases/download/v1.0.0/Buku-Kas-Ibuk-arm64-v8a-Lite.apk)** (~16 MB)
+              ⭐ **Sangat Direkomendasikan**: Khusus untuk Samsung Galaxy A54 dan semua smartphone Android modern (ukuran sangat ringan, hemat kuota, dan performa cepat).
+
+            * 📦 **[Buku-Kas-Ibuk-Universal.apk](https://github.com/alwinidzam/app-ibuk/releases/download/v1.0.0/Buku-Kas-Ibuk-Universal.apk)** (~30 MB)
+              Versi universal untuk semua jenis chipset Android lama maupun emulator.
+
+            ---
+            ### ✨ Fitur Unggulan:
+            * **Tap-to-Inspect Detail Sheet**: Ketuk baris riwayat kas untuk melihat rincian penuh, foto nota, edit data, atau hapus dengan konfirmasi 2 langkah aman (Apple HIG).
+            * **Multibuku Kas Fleksibel**: Tambah dan kelola pos buku kas tak terbatas (Kas Sekolah, Kas Ibu-Ibu PKK, Kas Rumah, dll).
+            * **Simpan Foto Nota / Kwitansi**: Kompresi cerdas dan simpan bukti transaksi langsung di memori HP.
+            * **Kirim Laporan ke WhatsApp**: Sekali klik untuk membagikan rekap kas atau bukti catatan ke grup bendahara WhatsApp.
+            * **Offline-First & Mandiri**: Data tersimpan aman di HP tanpa ketergantungan server luar.
+          files: dist-apk/*.apk
+          draft: false
+          prerelease: false
+          make_latest: true
 
       - name: 📋 Build Summary Report
         run: |
