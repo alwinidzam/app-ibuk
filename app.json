@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Buku Kas Ibuk",
+    "name": "Kas Bu Qom",
     "slug": "buku-kas-ibuk",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,7 +13,7 @@
     "android": {
       "package": "com.bukukas.ibuk",
       "adaptiveIcon": {
-        "backgroundColor": "#ECFDF5",
+        "backgroundColor": "#F3F3F3",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"

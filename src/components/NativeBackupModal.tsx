@@ -80,7 +80,7 @@ export function NativeBackupModal({ visible, onClose, onRestored }: Props) {
     try {
       const json = await exportBackup();
       await Share.share({
-        title: 'Cadangan Buku Kas Ibuk',
+        title: 'Cadangan Kas Bu Qom',
         message: json,
       });
     } catch {

@@ -70,12 +70,13 @@ jobs:
           mkdir -p dist-apk
           cd android
 
-          # 1. Build Ultra-Lightweight arm64-v8a APK (~18 MB - Khusus Samsung Galaxy A54 & HP Android Modern)
+          # 1. Build Ultra-Lightweight arm64-v8a APK (~27 MB - Khusus Redmi Note 15 & Smartphone Modern)
           echo "🔨 Compiling arm64-v8a Lite APK..."
           ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a --no-daemon
           ARM64_APK=$(find app/build/outputs/apk -type f -name "*.apk" | head -n 1)
           echo "Found arm64 APK: $ARM64_APK"
-          cp "$ARM64_APK" ../dist-apk/Buku-Kas-Ibuk-arm64-v8a-Lite.apk
+          cp "$ARM64_APK" ../dist-apk/Kas-Bu-Qom.apk
+          cp "$ARM64_APK" ../dist-apk/Kas-Bu-Qom-arm64-v8a.apk
           rm -rf app/build/outputs/apk
 
           # 2. Build Universal APK (Support all chipsets)
@@ -83,7 +84,7 @@ jobs:
           ./gradlew assembleRelease -PreactNativeArchitectures=armeabi-v7a,arm64-v8a,x86,x86_64 --no-daemon
           UNIVERSAL_APK=$(find app/build/outputs/apk -type f -name "*.apk" | head -n 1)
           echo "Found universal APK: $UNIVERSAL_APK"
-          cp "$UNIVERSAL_APK" ../dist-apk/Buku-Kas-Ibuk-Universal.apk
+          cp "$UNIVERSAL_APK" ../dist-apk/Kas-Bu-Qom-Universal.apk
 
           echo "=== DAFTAR FILE APK YANG BERHASIL DIKOMPILASI ==="
           ls -lh ../dist-apk/
@@ -91,7 +92,7 @@ jobs:
       - name: 🚀 Upload APK Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Buku-Kas-Ibuk-Optimized-APKs
+          name: Kas-Bu-Qom-Optimized-APKs
           path: dist-apk/*.apk
           retention-days: 30
 
@@ -100,22 +101,25 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         with:
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }}
-          name: "Buku Kas Ibuk ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }} (Release APK)"
+          name: "Kas Bu Qom ${{ github.ref_type == 'tag' && github.ref_name || 'v1.0.0' }} (Release APK)"
           body: |
-            ## 📱 Unduh Buku Kas Ibuk untuk Android
+            ## 📱 Unduh Kas Bu Qom untuk Android
 
-            Pilih salah satu file APK di bagian **Assets** di bawah ini:
+            Pilih file APK di bagian **Assets** di bawah ini:
 
-            * 🚀 **`Buku-Kas-Ibuk-arm64-v8a-Lite.apk`** (~18 MB)
-              ⭐ **Sangat Direkomendasikan**: Khusus untuk Samsung Galaxy A54 dan semua smartphone Android modern (ukuran sangat hemat, unduh cepat, dan performa mulus).
+            * 🚀 **`Kas-Bu-Qom.apk`** (~27 MB)
+              ⭐ **Sangat Direkomendasikan**: Khusus untuk Redmi Note 15, Samsung, dan semua smartphone Android modern (ukuran sangat hemat, unduh cepat, dan performa mulus).
 
-            * 📦 **`Buku-Kas-Ibuk-Universal.apk`** (~73 MB)
+            * 📦 **`Kas-Bu-Qom-Universal.apk`** (~73 MB)
               Versi universal untuk semua jenis chipset Android lama maupun emulator.
 
             ---
             ### ✨ Fitur Unggulan:
-            * **Tap-to-Inspect Detail Sheet**: Ketuk baris riwayat kas untuk melihat rincian penuh, foto nota, edit data, atau hapus dengan konfirmasi 2 langkah aman (Apple HIG).
-            * **Multibuku Kas Fleksibel**: Tambah dan kelola pos buku kas tak terbatas (Kas Sekolah, Kas Ibu-Ibu PKK, Kas Rumah, dll).
+            * **Logo & Identitas Baru**: Menggunakan icon resmi **Kas Bu Qom**.
+            * **Apple Ambient Mesh Lighting**: Gradien pendar halus di sudut layar sesuai identitas buku kas.
+            * **Liquid Frosted Glass Dock**: Navigasi bawah dengan efek blur kaca cair asli dan rim specular.
+            * **Tap-to-Inspect Detail Sheet**: Ketuk baris riwayat kas untuk melihat rincian penuh, foto nota, edit data, atau hapus dengan konfirmasi 2 langkah aman.
+            * **Multibuku Kas Fleksibel**: Kelola pos kas tak terbatas (Kas Sekolah, Kas Ibu-Ibu, Kas Rumah, dll).
             * **Simpan Foto Nota / Kwitansi**: Kompresi cerdas dan simpan bukti transaksi langsung di memori HP.
             * **Kirim Laporan ke WhatsApp**: Sekali klik untuk membagikan rekap kas atau bukti catatan ke grup bendahara WhatsApp.
             * **Offline-First & Mandiri**: Data tersimpan aman di HP tanpa ketergantungan server luar.
@@ -126,7 +130,7 @@ jobs:
 
       - name: 📋 Build Summary Report
         run: |
-          echo "### 📱 Build Android APK Ringan Berhasil! 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 Build Android APK Kas Bu Qom Berhasil! 🎉" >> $GITHUB_STEP_SUMMARY
           echo "File APK berhasil dikompilasi dalam mode **Release (Hermes Optimized)**:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Nama File | Ukuran | Keterangan |" >> $GITHUB_STEP_SUMMARY
@@ -137,4 +141,4 @@ jobs:
             echo "| **$fname** | \`$fsize\` | Siap diinstall di Android |" >> $GITHUB_STEP_SUMMARY
           done
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "💡 **Rekomendasi**: Gunakan file **\`Buku-Kas-Ibuk-arm64-v8a-Lite.apk\`** untuk Samsung Galaxy A54." >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Rekomendasi**: Gunakan file **\`Kas-Bu-Qom.apk\`** untuk Redmi Note 15." >> $GITHUB_STEP_SUMMARY

@@ -100,7 +100,7 @@ export function NativeTransactionDetailModal({
   const handleShareWhatsApp = async () => {
     AppleHaptic.actionMedium();
     const typeLabel = isIncome ? 'Pemasukan' : 'Pengeluaran';
-    const text = `*BUKTI CATATAN KAS IBUK*\n` +
+    const text = `*BUKTI CATATAN KAS BU QOM*\n` +
       `Buku: ${book.name}\n` +
       `---------------------------\n` +
       `Kategori: ${tx.category}\n` +
@@ -109,7 +109,7 @@ export function NativeTransactionDetailModal({
       `Tanggal: ${longDate(tx.date)}\n` +
       (tx.note ? `Keterangan: ${tx.note}\n` : '') +
       `---------------------------\n` +
-      `_Tercatat aman di aplikasi Buku Kas Ibuk_`;
+      `_Tercatat aman di aplikasi Kas Bu Qom_`;
 
     const url = `whatsapp://send?text=${encodeURIComponent(text)}`;
     const canOpen = await Linking.canOpenURL(url);

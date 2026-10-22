@@ -50,7 +50,7 @@ class ErrorBoundary extends Component<{ children: React.ReactNode }, ErrorBounda
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Buku Kas Ibuk Crash Caught:', error, errorInfo);
+    console.error('Kas Bu Qom Crash Caught:', error, errorInfo);
   }
 
   render() {
